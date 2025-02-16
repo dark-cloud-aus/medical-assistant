@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 import logging
 import streamlit as st
+from config import SYSTEM_PROMPT
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -27,11 +28,11 @@ def get_ai_response(patient_data, user_query):
             timeout=60.0
         )
         
-        # Prepare messages with instruction to not repeat the question
+        # Prepare messages using system prompt from config
         messages = [
             {
                 "role": "system",
-                "content": "You are a healthcare assistant, designed to provide simple information to patients. Provide direct answers without repeating the question. Structure your responses under these headings when appropriate: 1) Why am I in hospital? 2) What is happening now? 3) What is going to happen?"
+                "content": SYSTEM_PROMPT
             },
             {
                 "role": "user",
