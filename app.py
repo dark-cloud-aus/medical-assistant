@@ -1,3 +1,5 @@
+# Med Buddy hospital stay Ai assistant for CodeBlue team, MedHack 2025 challenge
+
 import streamlit as st
 import os
 from utils import load_patient_data, get_ai_response
@@ -156,7 +158,12 @@ with st.sidebar:
 
     if selected_file and selected_file != "No data files found":
         patient_data = load_patient_data(os.path.join('data', selected_file))
-        st.text_area("Patient Data Preview:", patient_data[:200] + "...", height=150)
+        st.text_area(
+            "Patient Data:",
+            patient_data,
+            height=400,
+            key="patient_data_preview"
+        )
     else:
         patient_data = None
         st.error("Please add patient data files to the 'data' folder.")
