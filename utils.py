@@ -46,9 +46,9 @@ def get_ai_response(patient_data, user_query):
         # Make API call
         try:
             completion = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4-0125-preview",
                 messages=messages,
-                temperature=0.7,
+                temperature=0.1,
                 max_tokens=500
             )
             
