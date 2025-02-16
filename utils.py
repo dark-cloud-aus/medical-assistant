@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 import logging
+import streamlit as st
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -11,10 +12,10 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 # Initialize OpenAI client
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = st.secrets["openai"]["OPENAI_API_KEY"]
 if not api_key:
-    logger.error("No API key found in environment variables")
-    raise ValueError("OPENAI_API_KEY not found in environment variables")
+    logger.error("No API key found in Streamlit secrets")
+    raise ValueError("OPENAI_API_KEY not found in Streamlit secrets")
 
 client = OpenAI(api_key=api_key)
 
