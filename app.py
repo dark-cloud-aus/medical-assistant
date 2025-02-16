@@ -188,23 +188,25 @@ if patient_data:
     # Create a form to handle the input
     with st.form(key='message_form', clear_on_submit=True):
         user_input = st.text_input("Ask about your hospital stay:", key="user_input")
-        submit_button = st.form_submit_button("Send")
-    
-    # Only process if the form is submitted and there's input
-    if submit_button and user_input:
-        # Prevent duplicate messages
-        if not st.session_state.messages or st.session_state.messages[-1]['content'] != user_input:
-            # Add user message to chat history
-            st.session_state.messages.append({"role": "user", "content": user_input})
-            
-            # Get AI response
-            response = get_ai_response(patient_data, user_input)
-            
-            # Add assistant response to chat history
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            
-            # Use the new rerun method
-            st.rerun()
+        col1, col2 = st.columns([1, 5])
+        with col1:
+            submit_button = st.form_submit_button("Send")
+        with col2:
+            if submit_button:
+                with st.spinner('Thinking... 🤔'):
+                    # Only process if there's input
+                    if user_input and (not st.session_state.messages or st.session_state.messages[-1]['content'] != user_input):
+                        # Add user message to chat history
+                        st.session_state.messages.append({"role": "user", "content": user_input})
+                        
+                        # Get AI response
+                        response = get_ai_response(patient_data, user_input)
+                        
+                        # Add assistant response to chat history
+                        st.session_state.messages.append({"role": "assistant", "content": response})
+                        
+                        # Use the new rerun method
+                        st.rerun()
 
     # Clear chat button (outside the form)
     if st.button("Clear Chat"):
