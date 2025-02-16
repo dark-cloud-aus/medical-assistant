@@ -8,16 +8,17 @@ import streamlit as st
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
-
-# Initialize OpenAI client
-api_key = st.secrets["openai"]["OPENAI_API_KEY"]
-if not api_key:
-    logger.error("No API key found in Streamlit secrets")
-    raise ValueError("OPENAI_API_KEY not found in Streamlit secrets")
-
-client = OpenAI(api_key=api_key)
+def get_openai_client():
+    """Initialize and return OpenAI client"""
+    try:
+        api_key = st.secrets["openai"]["OPENAI_API_KEY"]
+        if not api_key:
+            logger.error("No API key found in Streamlit secrets")
+            raise ValueError("OPENAI_API_KEY not found in Streamlit secrets")
+        return OpenAI(api_key=api_key)
+    except Exception as e:
+        logger.error(f"Error initializing OpenAI client: {str(e)}")
+        raise
 
 def load_patient_data(file_path):
     """Load patient data from a text file"""
@@ -30,8 +31,8 @@ def load_patient_data(file_path):
 def get_ai_response(patient_data, user_query):
     """Get response from OpenAI GPT-4"""
     try:
-        # Log API key (first few characters)
-        logger.info(f"Using API key: {api_key[:10]}...")
+        # Initialize client for this request
+        client = get_openai_client()
         
         system_prompt = """You are a healthcare assistant, designed to provide simple information to patients with low education or special needs during a hospital stay. Only use the information provided in the patient data to answer questions. If the information is not in the patient data, say you don't have that information. Structure your responses under these headings when appropriate:
 
