@@ -2,11 +2,11 @@
 
 import streamlit as st
 import os
-from utils import load_patient_data, get_ai_response
+from utils import load_patient_data, get_ai_response, get_patient_name
 
 # Page configuration
 st.set_page_config(
-    page_title="Medical Assistant AI",
+    page_title="Hospital Buddy",
     page_icon="🏥",
     layout="wide"
 )
@@ -144,22 +144,26 @@ if 'messages' not in st.session_state:
     st.session_state.messages = []
 
 # Header
-st.title("🏥 Medical Assistant AI")
+st.title("🏥 Hospital Buddy")
+if 'patient_data' in st.session_state and st.session_state.patient_data:
+    patient_name = get_patient_name(st.session_state.patient_data)
+    st.markdown(f"### Welcome back {patient_name}")
 st.markdown("---")
 
-# Sidebar for patient data selection
+# Sidebar with new title
 with st.sidebar:
-    st.header("Patient Data")
+    st.header("Your Medical Dashboard")
     data_files = os.listdir('data') if os.path.exists('data') else []
     selected_file = st.selectbox(
-        "Select patient data file:",
+        "Select patient file:",
         data_files if data_files else ["No data files found"]
     )
 
     if selected_file and selected_file != "No data files found":
         patient_data = load_patient_data(os.path.join('data', selected_file))
+        st.session_state.patient_data = patient_data  # Store in session state
         st.text_area(
-            "Patient Data:",
+            "Medical Information:",
             patient_data,
             height=400,
             key="patient_data_preview"
