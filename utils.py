@@ -15,9 +15,14 @@ def get_openai_client():
         if not api_key:
             logger.error("No API key found in Streamlit secrets")
             raise ValueError("OPENAI_API_KEY not found in Streamlit secrets")
+        
+        # Log first few characters of API key for debugging
+        logger.info(f"Using API key starting with: {api_key[:8]}...")
+        
         return OpenAI(api_key=api_key)
     except Exception as e:
         logger.error(f"Error initializing OpenAI client: {str(e)}")
+        st.error(f"Failed to initialize OpenAI client: {str(e)}")
         raise
 
 def load_patient_data(file_path):
@@ -41,6 +46,9 @@ def get_ai_response(patient_data, user_query):
 3) What is going to happen?"""
         
         try:
+            # Log the attempt to call OpenAI
+            logger.info("Attempting to call OpenAI API...")
+            
             response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
@@ -50,11 +58,19 @@ def get_ai_response(patient_data, user_query):
                 temperature=0.7,
                 max_tokens=500
             )
+            
+            # Log successful response
+            logger.info("Successfully received response from OpenAI")
+            
             return response.choices[0].message.content.strip()
         except Exception as e:
-            logger.error(f"Error calling OpenAI API: {str(e)}")
-            return f"I apologize, but I'm having trouble accessing the AI service. Please try again in a moment. Error: {str(e)}"
+            error_msg = f"Error calling OpenAI API: {str(e)}"
+            logger.error(error_msg)
+            st.error(error_msg)  # This will show in the UI
+            return f"I apologize, but I'm having trouble accessing the AI service. Error: {str(e)}"
             
     except Exception as e:
-        logger.error(f"Unexpected error: {str(e)}")
-        return "I apologize, but something went wrong. Please try again later." 
+        error_msg = f"Unexpected error in get_ai_response: {str(e)}"
+        logger.error(error_msg)
+        st.error(error_msg)  # This will show in the UI
+        return "I apologize, but something went wrong. Please check the error message above." 
