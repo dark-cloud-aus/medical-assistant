@@ -5,6 +5,13 @@ import os
 import json
 from utils import load_patient_data, get_ai_response, get_patient_name
 
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Hospital Buddy",
+    page_icon="🏥",
+    layout="wide"
+)
+
 # Theme handling
 def load_theme():
     try:
@@ -19,6 +26,12 @@ def load_theme():
             }
         }
 
+# Initialize session states
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
+if 'notes' not in st.session_state:
+    st.session_state.notes = ""
+
 # Apply theme
 theme = load_theme()
 st.markdown(f"""
@@ -29,19 +42,6 @@ st.markdown(f"""
     }}
 </style>
 """, unsafe_allow_html=True)
-
-# Initialize session states
-if 'messages' not in st.session_state:
-    st.session_state.messages = []
-if 'notes' not in st.session_state:
-    st.session_state.notes = ""
-
-# Page configuration
-st.set_page_config(
-    page_title="Hospital Buddy",
-    page_icon="🏥",
-    layout="wide"
-)
 
 # Header
 st.title("🏥 Hospital Buddy")
@@ -56,12 +56,20 @@ with st.sidebar:
     
     # Patient File Selection
     data_files = os.listdir('data') if os.path.exists('data') else []
-    selected_file = st.selectbox(
-        "Select patient file:",
-        data_files if data_files else ["No data files found"]
-    )
-
-    if selected_file and selected_file != "No data files found":
+    # Filter out hospital.txt and any other non-patient files
+    patient_files = [f for f in data_files if f.startswith('patient_')]
+    
+    if not patient_files:
+        st.error("No patient data files found in the 'data' folder.")
+        patient_data = None
+    else:
+        # Set default value to the first patient file
+        selected_file = st.selectbox(
+            "Select patient file:",
+            patient_files,
+            index=0  # This ensures the first file is selected by default
+        )
+        
         patient_data = load_patient_data(os.path.join('data', selected_file))
         st.session_state.patient_data = patient_data
         
@@ -69,8 +77,9 @@ with st.sidebar:
         st.text_area(
             "Medical Information:",
             patient_data,
-            height=400,
-            key="patient_data_preview"
+            height=100,
+            key="patient_data_preview",
+            help="Click and drag the bottom right corner to expand"
         )
         
         # Personal Notes Section
@@ -96,9 +105,6 @@ with st.sidebar:
             )
         except:
             st.warning("No medication information found")
-    else:
-        patient_data = None
-        st.error("Please add patient data files to the 'data' folder.")
 
 # Chat interface
 st.container()
