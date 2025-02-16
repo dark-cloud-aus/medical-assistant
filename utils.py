@@ -22,6 +22,9 @@ def get_ai_response(patient_data, user_query):
         # Get API key from Streamlit secrets
         api_key = st.secrets["openai"]["OPENAI_API_KEY"]
         
+        # Load hospital information
+        hospital_info = load_patient_data('data/hospital.txt')
+        
         # Create OpenAI client
         client = OpenAI(
             api_key=api_key,
@@ -36,7 +39,7 @@ def get_ai_response(patient_data, user_query):
             },
             {
                 "role": "user",
-                "content": f"Patient Data: {patient_data}\n\nUser Question: {user_query}"
+                "content": f"Hospital Information: {hospital_info}\n\nPatient Data: {patient_data}\n\nUser Question: {user_query}"
             }
         ]
         
