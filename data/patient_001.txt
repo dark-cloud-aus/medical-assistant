@@ -20,11 +20,30 @@ Current Status:
 - Monitoring cardiac enzymes
 
 Current Treatment:
-1. Aspirin 81mg daily
-2. Clopidogrel 75mg daily
-3. Metoprolol 25mg twice daily
-4. Continuous cardiac monitoring
-5. Physical therapy started for early mobilization
+Medications:
+1. Aspirin 81mg
+   - Purpose: Blood thinner to prevent clots
+   - Dosage: Take one tablet daily with food
+   - Important: Do not skip doses
+
+2. Clopidogrel (Plavix) 75mg
+   - Purpose: Prevents blood clots after angioplasty
+   - Dosage: One tablet daily
+   - Important: Take at the same time each day
+
+3. Metoprolol (Beta blocker) 25mg
+   - Purpose: Controls heart rate and blood pressure
+   - Dosage: One tablet twice daily
+   - Side effects: May cause dizziness
+
+4. Atorvastatin (Lipitor) 40mg
+   - Purpose: Lowers cholesterol
+   - Dosage: One tablet at bedtime
+   - Important: Avoid grapefruit juice
+
+Other Treatments:
+- Continuous cardiac monitoring
+- Physical therapy started for early mobilization
 
 Plan:
 - Anticipated hospital stay: 5-7 days
