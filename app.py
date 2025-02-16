@@ -192,13 +192,13 @@ if patient_data:
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
             
-            # Rerun to update chat display
-            st.experimental_rerun()
+            # Use the new rerun method
+            st.rerun()
 
     # Clear chat button (outside the form)
     if st.button("Clear Chat"):
         st.session_state.messages = []
-        st.experimental_rerun()
+        st.rerun()
 else:
     st.warning("Please select a patient data file to start the conversation.")
 
